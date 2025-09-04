@@ -24,6 +24,9 @@ public class GameLogic
         switch (gameType)
         {
             case Constants.GameType.SinglePlay:
+                firstPlayerState = new PlayerState(true);
+                secondPlayerState = new AIState();
+                SetState(firstPlayerState);
                 break;
             case Constants.GameType.DualPlay:
                 firstPlayerState = new PlayerState(true);
@@ -33,6 +36,11 @@ public class GameLogic
             case Constants.GameType.MultiPlay:
                 break;
         }
+    }
+
+    public Constants.PlayerType[,] GetBoard()
+    {
+        return _board;
     }
 
     public void SetState(BasePlayerState state)
@@ -69,7 +77,10 @@ public class GameLogic
         firstPlayerState = null;
         secondPlayerState = null;
 
-        
+        GameManager.Instance.OpenConfirmPanel("게임오버", () =>
+        {
+            GameManager.Instance.ChangeToMainScene();
+        });
     }
 
     // 게임의 결과 확인
@@ -81,8 +92,8 @@ public class GameLogic
         return GameResult.None;                                                             // 계속 진행
     }
 
-    // 비겻는지 확인
-    public bool CheckGameDraw(Constants.PlayerType[,] board)
+    // 비겼는지 확인
+    public static bool CheckGameDraw(Constants.PlayerType[,] board)
     {
         for (var row = 0; row < board.GetLength(0); row++)
         {
@@ -96,7 +107,7 @@ public class GameLogic
     }
 
     // 게임 승리 확인
-    private bool CheckGameWin(Constants.PlayerType playerType, Constants.PlayerType[,] board)
+    public static bool CheckGameWin(Constants.PlayerType playerType, Constants.PlayerType[,] board)
     {
         // col 체크
         for (var row = 0; row < board.GetLength(0); row++)
