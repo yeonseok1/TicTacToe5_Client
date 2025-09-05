@@ -3,7 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private GameObject confirmPanel;
+    [SerializeField] private GameObject confirmPanel;   // 확인 패널
+    [SerializeField] private GameObject signinPanel;    // 로그인 패널
 
     private Constants.GameType _gameType;
 
@@ -12,6 +13,11 @@ public class GameManager : Singleton<GameManager>
     private GameLogic _gameLogic;
 
     private GameUIController _gameUIController;
+
+    void Start()
+    {
+        OpenSigninPanel();
+    }
 
     /// <summary>
     /// Main에서 Game Scene으로 전환시 호출될 메서드
@@ -34,6 +40,15 @@ public class GameManager : Singleton<GameManager>
             var confirmPanelObject = Instantiate(confirmPanel, _canvas.transform);
             confirmPanelObject.GetComponent<ConfirmPanelController>()
                 .Show(message, onConfirmButtonClicked);
+        }
+    }
+
+    public void OpenSigninPanel()
+    {
+        if(_canvas != null)
+        {
+            var signinPanelObject = Instantiate(signinPanel, _canvas.transform);
+            signinPanelObject.GetComponent<SigninPanelController>().Show();
         }
     }
 
