@@ -72,6 +72,6 @@ public class SigninPanelController : PanelController
 
     public void OnClickSignupButton()
     {
-
+        GameManager.Instance.OpenSignupPanel();
     }
 }
