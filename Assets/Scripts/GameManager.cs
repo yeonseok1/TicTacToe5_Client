@@ -35,6 +35,9 @@ public class GameManager : Singleton<GameManager>
     // Game에서 Main Scene으로 전환시 호출될 메서드
     public void ChangeToMainScene()
     {
+        _gameLogic?.Dispose();
+        _gameLogic = null;
+
         SceneManager.LoadScene("Main");
     }
 
@@ -78,24 +81,29 @@ public class GameManager : Singleton<GameManager>
 
         if (scene.name == "Game")
         {
-            // blcok 초기화
+            // Block 초기화
             var blockController = FindFirstObjectByType<BlockController>();
             if (blockController != null)
             {
                 blockController.InitBlocks();
             }
 
+            // Game UI Controller 할당 및 초기화
             _gameUIController = FindFirstObjectByType<GameUIController>();
-            if(_gameUIController != null)
+            if (_gameUIController != null)
             {
                 _gameUIController.SetGameTurnPanel(GameUIController.GameTurnPanelType.None);
             }
 
-            if(_gameLogic != null)
-            {
-                // TODO: Game Logic을 초기화
-            }
+            // GameLogic 생성
+            if (_gameLogic != null) _gameLogic.Dispose();
             _gameLogic = new GameLogic(blockController, _gameType);
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        _gameLogic?.Dispose();
+        _gameLogic = null;
     }
 }
